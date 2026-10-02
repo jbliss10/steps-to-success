@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Steps to Success</title>
+<style>
+:root{--bg:#0c0d10;--panel:#15171c;--text:#f4f1ea;--muted:#bbb6ab;--accent:#76c893;--border:rgba(255,255,255,.14)}
+*{box-sizing:border-box}html,body{width:100%;min-height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+body{min-height:100dvh}.screen{width:100%;min-height:100dvh;padding:clamp(20px,3vw,54px);display:grid;grid-template-rows:auto 1fr auto;gap:18px;background:radial-gradient(circle at center,rgba(118,200,147,.09),transparent 48%),linear-gradient(180deg,#111318,#090a0d)}
+.header{text-align:center}.eyebrow{margin:0 0 8px;color:var(--accent);font-size:clamp(14px,1.5vw,24px);font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+h1{margin:0;font-size:clamp(38px,5.5vw,78px);line-height:1;letter-spacing:-.03em}
+.progress-wrap{width:min(900px,90vw);margin:18px auto 0}.progress-labels{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:8px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-size:clamp(12px,1.4vw,20px)}
+.percent{color:var(--accent);font-size:clamp(22px,2.5vw,38px)}.progress-track{width:100%;height:clamp(18px,2.2vw,30px);border-radius:999px;background:#272a30;border:1px solid var(--border);overflow:hidden;box-shadow:inset 0 2px 8px rgba(0,0,0,.4)}
+.progress-fill{width:0;height:100%;border-radius:999px;background:var(--accent);box-shadow:0 0 24px rgba(118,200,147,.4);transition:width .75s cubic-bezier(.2,.8,.2,1)}
+.content{display:grid;place-items:center;text-align:center;max-width:1200px;width:100%;margin:0 auto}.card{width:min(1100px,92vw);min-height:42vh;padding:clamp(24px,3.5vw,56px);border:1px solid var(--border);border-radius:28px;background:rgba(21,23,28,.88);box-shadow:0 18px 70px rgba(0,0,0,.45);display:grid;place-items:center;transition:opacity .4s ease,transform .4s ease}
+.card.fade{opacity:0;transform:scale(.98)}.step{margin:0 0 18px;color:var(--accent);font-size:clamp(17px,2vw,30px);font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.message{margin:0;max-width:1000px;font-size:clamp(28px,4.2vw,62px);line-height:1.12;font-weight:800;text-wrap:balance}.detail{margin:24px auto 0;max-width:950px;color:var(--muted);font-size:clamp(18px,2vw,29px);line-height:1.4;text-wrap:balance}
+.final .message{font-size:clamp(27px,3.7vw,54px)}.final strong{color:var(--accent)}.controls{display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap;padding-bottom:6px}
+.control{border:0;border-radius:999px;padding:17px 28px;font-size:clamp(17px,1.8vw,26px);font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.primary{background:var(--accent);color:#0c1810;min-width:min(480px,80vw);box-shadow:0 0 34px rgba(118,200,147,.22)}
+.secondary{background:#2b2e35;color:var(--text);border:1px solid var(--border);min-width:200px}.control:active{transform:translateY(2px)}.control:disabled{opacity:.35;cursor:not-allowed}
+.status{position:fixed;right:18px;bottom:14px;color:var(--muted);font-size:14px;opacity:0;transition:opacity .2s}.status.show{opacity:1}
+@media(max-width:700px){.screen{padding:16px;height:auto;min-height:100dvh;gap:12px}.card{min-height:38vh}.controls{gap:10px;padding-bottom:24px}.control{width:100%}}
+</style></head>
+<body>
+<main class="screen">
+<header class="header"><p class="eyebrow">Interactive Exhibit</p><h1>Steps to Success</h1>
+<div class="progress-wrap"><div class="progress-labels"><span>Progress toward a sustainable new life</span><span id="percent" class="percent">0%</span></div>
+<div id="track" class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="fill" class="progress-fill"></div></div></div></header>
+<section class="content"><div id="card" class="card" aria-live="polite"></div></section>
+<footer class="controls"><button id="stepButton" class="control primary">Take the Next Step</button><button id="resetButton" class="control secondary">Start Over</button></footer>
+</main><div id="status" class="status"></div>
+<script>
+const TOTAL_STEPS=12,IDLE_RESET_MS=60000,IDLE_WARNING_MS=10000,FINAL_SCREEN_MS=30000,FINAL_PAUSE_MS=4500;
+const steps=[
+{title:"Deeply processed and healed from abuse and trauma.",detail:"Deep inner work creates the foundation for a sustainable life—built and experienced from the inside out."},
+{title:"Developed a strong sense of self.",detail:"She knows who she is and knows that she is capable."},
+{title:"Gained critical life skills.",detail:"Practical skills support ongoing health, stability, and independence."},
+{title:"Children stabilized and thriving.",detail:"Her children have the consistency, safety, and support they need to grow."},
+{title:"Graduated from college or job training.",detail:"Education and training create new opportunities for the future."},
+{title:"Built a career with a livable wage.",detail:"Stable income makes long-term independence possible."},
+{title:"Graduated from the program at Sacha's House.",detail:"Two years of support provide time to build a strong foundation for a sustainable new life."},
+{title:"Moved beyond survival mode.",detail:"Life is no longer only about getting through today. She can now live in growth mode."},
+{title:"Experienced success—and the power of her own choices.",detail:"She sees that the choices she makes can now positively impact her future."},
+{title:"Connected to a supportive community.",detail:"She is no longer doing life alone."},
+{title:"Moved into independent, permanent housing.",detail:"She has built a positive tenant record and is prepared for stable housing of her own."},
+{title:"Experienced the life-transforming power and love of God.",detail:"She knows the love of God, who will never leave her or forsake her."}
+];
+const card=document.getElementById("card"),stepButton=document.getElementById("stepButton"),resetButton=document.getElementById("resetButton"),fill=document.getElementById("fill"),percent=document.getElementById("percent"),track=document.getElementById("track"),status=document.getElementById("status");
+let currentStep=0,idleTimer,warningTimer,countdownTimer,finalTimer,transitionTimer,finalPauseTimer;
+function clearTimers(){clearTimeout(idleTimer);clearTimeout(warningTimer);clearInterval(countdownTimer);clearTimeout(finalTimer);clearTimeout(transitionTimer);clearTimeout(finalPauseTimer);status.classList.remove("show");status.textContent=""}
+function setProgress(n){const pct=Math.round(n/TOTAL_STEPS*100);fill.style.width=pct+"%";percent.textContent=pct+"%";track.setAttribute("aria-valuenow",pct)}
+function transitionTo(html,cls=""){clearTimeout(transitionTimer);card.classList.add("fade");transitionTimer=setTimeout(()=>{card.className=("card "+cls).trim();card.innerHTML=html;requestAnimationFrame(()=>card.classList.remove("fade"))},350)}
+function showOpening(){setProgress(0);transitionTo(`<div><p class="step">Begin Here</p><p class="message">Building a sustainable new life happens one step at a time.</p><p class="detail">Press “Take the Next Step” to see what long-term success can look like.</p></div>`)}
+function showStep(){const s=steps[currentStep-1];setProgress(currentStep);transitionTo(`<div><p class="step">Step ${currentStep} of ${TOTAL_STEPS}</p><p class="message">${s.title}</p><p class="detail">${s.detail}</p></div>`)}
+function showFinal(){stepButton.disabled=true;transitionTo(`<div><p class="step">100% Success</p><p class="message"><strong>A sustainable new life.</strong></p><p class="detail">Because our program is 2 years, there is time for the women to accomplish all this and why we have a <strong>100% success rate</strong> for those who complete our 2 year program at Sacha's House.</p></div>`,"final");finalTimer=setTimeout(resetExperience,FINAL_SCREEN_MS)}
+function restartIdle(){clearTimeout(idleTimer);clearTimeout(warningTimer);clearInterval(countdownTimer);status.classList.remove("show");if(currentStep===0||currentStep>=TOTAL_STEPS)return;warningTimer=setTimeout(()=>{let s=Math.ceil(IDLE_WARNING_MS/1000);status.textContent=`Session resets in ${s} seconds`;status.classList.add("show");countdownTimer=setInterval(()=>{s--;if(s>0)status.textContent=`Session resets in ${s} seconds`;else clearInterval(countdownTimer)},1000)},IDLE_RESET_MS-IDLE_WARNING_MS);idleTimer=setTimeout(resetExperience,IDLE_RESET_MS)}
+function takeNextStep(){if(currentStep>=TOTAL_STEPS)return;currentStep++;showStep();if(currentStep===TOTAL_STEPS){clearTimeout(idleTimer);clearTimeout(warningTimer);clearInterval(countdownTimer);finalPauseTimer=setTimeout(showFinal,FINAL_PAUSE_MS)}else restartIdle()}
+function resetExperience(){clearTimers();currentStep=0;stepButton.disabled=false;showOpening()}
+stepButton.addEventListener("click",takeNextStep);resetButton.addEventListener("click",resetExperience);
+document.addEventListener("keydown",e=>{if(e.repeat)return;if(e.key==="1")takeNextStep();else if(e.key==="2"||e.key==="Escape")resetExperience()});
+resetExperience();
+</script></body></html>
