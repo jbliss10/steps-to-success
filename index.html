@@ -23,7 +23,7 @@ h1{margin:0;font-size:clamp(38px,5.5vw,78px);line-height:1;letter-spacing:-.03em
 </style></head>
 <body>
 <main class="screen">
-<header class="header"><p class="eyebrow">Interactive Exhibit</p><h1>Steps to Success</h1>
+<header class="header"><p class="eyebrow">Interactive Experience</p><h1>Steps to Success</h1>
 <div class="progress-wrap"><div class="progress-labels"><span>Progress toward a sustainable new life</span><span id="percent" class="percent">0%</span></div>
 <div id="track" class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="fill" class="progress-fill"></div></div></div></header>
 <section class="content"><div id="card" class="card" aria-live="polite"></div></section>
@@ -32,18 +32,18 @@ h1{margin:0;font-size:clamp(38px,5.5vw,78px);line-height:1;letter-spacing:-.03em
 <script>
 const TOTAL_STEPS=12,IDLE_RESET_MS=60000,IDLE_WARNING_MS=10000,FINAL_SCREEN_MS=30000,FINAL_PAUSE_MS=4500;
 const steps=[
-{title:"Deeply processed and healed from abuse and trauma.",detail:"Deep inner work creates the foundation for a sustainable life—built and experienced from the inside out."},
-{title:"Developed a strong sense of self.",detail:"She knows who she is and knows that she is capable."},
-{title:"Gained critical life skills.",detail:"Practical skills support ongoing health, stability, and independence."},
-{title:"Children stabilized and thriving.",detail:"Her children have the consistency, safety, and support they need to grow."},
-{title:"Graduated from college or job training.",detail:"Education and training create new opportunities for the future."},
-{title:"Built a career with a livable wage.",detail:"Stable income makes long-term independence possible."},
-{title:"Graduated from the program at Sacha's House.",detail:"Two years of support provide time to build a strong foundation for a sustainable new life."},
-{title:"Moved beyond survival mode.",detail:"Life is no longer only about getting through today. She can now live in growth mode."},
-{title:"Experienced success—and the power of her own choices.",detail:"She sees that the choices she makes can now positively impact her future."},
-{title:"Connected to a supportive community.",detail:"She is no longer doing life alone."},
-{title:"Moved into independent, permanent housing.",detail:"She has built a positive tenant record and is prepared for stable housing of her own."},
-{title:"Experienced the life-transforming power and love of God.",detail:"She knows the love of God, who will never leave her or forsake her."}
+{title:"Connect to a supportive community.",detail:"She is no longer doing life alone."},
+{title:"Move beyond survival mode.",detail:"Life is no longer only about getting through today. She can now live in growth mode."},
+{title:"Stabilize children so they can thrive.",detail:"Her children have the consistency, safety, and support they need to grow."},
+{title:"Experience success—and the power of her own choices.",detail:"She sees that the choices she makes can now positively impact her future."},
+{title:"Gain critical life skills.",detail:"Practical skills support ongoing health, stability, and independence."},
+{title:"Experience the life-transforming power and love of God.",detail:"She knows the love of God, who will never leave her or forsake her."},
+{title:"Deeply process and heal from abuse and trauma.",detail:"Deep inner work creates the foundation for a sustainable life—built and experienced from the inside out."},
+{title:"Develop a strong sense of self.",detail:"She knows who she is and knows that she is capable."},
+{title:"Graduate from college or job training.",detail:"Education and training create new opportunities for the future."},
+{title:"Build a career with a livable wage.",detail:"Stable income makes long-term independence possible."},
+{title:"Graduate from the program at Sacha's House.",detail:"Two years of support provide time to build a strong foundation for a sustainable new life."},
+{title:"Move into independent, permanent housing.",detail:"She has built a positive tenant record and is prepared for stable housing of her own."},
 ];
 const card=document.getElementById("card"),stepButton=document.getElementById("stepButton"),resetButton=document.getElementById("resetButton"),fill=document.getElementById("fill"),percent=document.getElementById("percent"),track=document.getElementById("track"),status=document.getElementById("status");
 let currentStep=0,idleTimer,warningTimer,countdownTimer,finalTimer,transitionTimer,finalPauseTimer;
