@@ -27,7 +27,7 @@ h1{margin:0;font-size:clamp(38px,5.5vw,78px);line-height:1;letter-spacing:-.03em
 <div class="progress-wrap"><div class="progress-labels"><span>Progress toward a sustainable new life</span><span id="percent" class="percent">0%</span></div>
 <div id="track" class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="fill" class="progress-fill"></div></div></div></header>
 <section class="content"><div id="card" class="card" aria-live="polite"></div></section>
-<footer class="controls"><button id="stepButton" class="control primary">Take the Next Step</button><button id="resetButton" class="control secondary">Start Over</button></footer>
+<footer class="controls"><button id="stepButton" class="control primary">Take the Next Step</button><button id="resetButton" class="control secondary" style="display:none">Start Over</button></footer>
 </main><div id="status" class="status"></div>
 <script>
 const TOTAL_STEPS=12,IDLE_RESET_MS=60000,IDLE_WARNING_MS=10000,FINAL_SCREEN_MS=30000,FINAL_PAUSE_MS=4500;
@@ -52,10 +52,29 @@ function setProgress(n){const pct=Math.round(n/TOTAL_STEPS*100);fill.style.width
 function transitionTo(html,cls=""){clearTimeout(transitionTimer);card.classList.add("fade");transitionTimer=setTimeout(()=>{card.className=("card "+cls).trim();card.innerHTML=html;requestAnimationFrame(()=>card.classList.remove("fade"))},350)}
 function showOpening(){setProgress(0);transitionTo(`<div><p class="step">Begin Here</p><p class="message">Building a sustainable new life happens one step at a time.</p><p class="detail">Press “Take the Next Step” to see what long-term success can look like.</p></div>`)}
 function showStep(){const s=steps[currentStep-1];setProgress(currentStep);transitionTo(`<div><p class="step">Step ${currentStep} of ${TOTAL_STEPS}</p><p class="message">${s.title}</p><p class="detail">${s.detail}</p></div>`)}
-function showFinal(){stepButton.disabled=true;transitionTo(`<div><p class="step">100% Success</p><p class="message"><strong>A sustainable new life.</strong></p><p class="detail">Because our program is 2 years, there is time for the women to accomplish all this and why we have a <strong>100% success rate</strong> for those who complete our 2 year program at Sacha's House.</p></div>`,"final");finalTimer=setTimeout(resetExperience,FINAL_SCREEN_MS)}
+function showFinal(){stepButton.disabled = false;stepButton.textContent = "Start Over";transitionTo(`<div><p class="step">100% Success</p><p class="message"><strong>A sustainable new life.</strong></p><p class="detail">Because our program is 2 years, there is time for the women to accomplish all this and why we have a <strong>100% success rate</strong> for those who complete our 2 year program at Sacha's House.</p></div>`,"final");finalTimer=setTimeout(resetExperience,FINAL_SCREEN_MS)}
 function restartIdle(){clearTimeout(idleTimer);clearTimeout(warningTimer);clearInterval(countdownTimer);status.classList.remove("show");if(currentStep===0||currentStep>=TOTAL_STEPS)return;warningTimer=setTimeout(()=>{let s=Math.ceil(IDLE_WARNING_MS/1000);status.textContent=`Session resets in ${s} seconds`;status.classList.add("show");countdownTimer=setInterval(()=>{s--;if(s>0)status.textContent=`Session resets in ${s} seconds`;else clearInterval(countdownTimer)},1000)},IDLE_RESET_MS-IDLE_WARNING_MS);idleTimer=setTimeout(resetExperience,IDLE_RESET_MS)}
-function takeNextStep(){if(currentStep>=TOTAL_STEPS)return;currentStep++;showStep();if(currentStep===TOTAL_STEPS){clearTimeout(idleTimer);clearTimeout(warningTimer);clearInterval(countdownTimer);finalPauseTimer=setTimeout(showFinal,FINAL_PAUSE_MS)}else restartIdle()}
-function resetExperience(){clearTimers();currentStep=0;stepButton.disabled=false;showOpening()}
+function takeNextStep() {
+  // If we've reached 100%, the next press starts over
+  if (currentStep >= TOTAL_STEPS) {
+    resetExperience();
+    return;
+  }
+
+  currentStep++;
+  showStep();
+
+  if (currentStep === TOTAL_STEPS) {
+    clearTimeout(idleTimer);
+    clearTimeout(warningTimer);
+    clearInterval(countdownTimer);
+
+    finalPauseTimer = setTimeout(showFinal, FINAL_PAUSE_MS);
+  } else {
+    restartIdle();
+  }
+}
+function resetExperience(){clearTimers();currentStep=0;stepButton.disabled=false;stepButton.textContent = "Take the Next Step";showOpening()}
 stepButton.addEventListener("click",takeNextStep);resetButton.addEventListener("click",resetExperience);
 document.addEventListener("keydown",e=>{if(e.repeat)return;if(e.key==="1")takeNextStep();else if(e.key==="2"||e.key==="Escape")resetExperience()});
 resetExperience();
